@@ -41,19 +41,3 @@ jobs:
         with:
           name: 404-logs
           path: 404/*.txt
-
-Replace `your_script.py` with the correct filename for your script.
-
----
-
-### **Step 2: Push to GitHub**
-
-- Create a new repository.
-- Add your Python script (`your_script.py`) in the root of the repository.
-- Create the folder `404` and ensure your script writes logs there if needed.
-- Commit and push.
-
-```bash
-git add .
-git commit -m "Setup Jeep Wrangler check"
-git push origin main
