@@ -1,0 +1,59 @@
+name: Check Jeep Page
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'  # Runs every minute
+  workflow_dispatch:       # Allow manual run
+
+jobs:
+  check_page:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium
+          sudo apt-get update
+          sudo apt-get install -y firefox
+          sudo apt-get install -y xvfb
+          sudo wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
+          sudo tar -xzf geckodriver-v0.34.0-linux64.tar.gz -C /usr/local/bin/
+          sudo chmod +x /usr/local/bin/geckodriver
+          
+      - name: Run Python script
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 &  # start virtual display
+          export DISPLAY=:99
+          pip install selenium
+          python your_script.py
+          
+      - name: Upload Logs if Exists
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 404-logs
+          path: 404/*.txt
+
+Replace `your_script.py` with the correct filename for your script.
+
+---
+
+### **Step 2: Push to GitHub**
+
+- Create a new repository.
+- Add your Python script (`your_script.py`) in the root of the repository.
+- Create the folder `404` and ensure your script writes logs there if needed.
+- Commit and push.
+
+```bash
+git add .
+git commit -m "Setup Jeep Wrangler check"
+git push origin main
