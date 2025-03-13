@@ -33,7 +33,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 &  # start virtual display
           export DISPLAY=:99
           pip install selenium
-          python your_script.py
+          python check_jeep_page.py
           
       - name: Upload Logs if Exists
         uses: actions/upload-artifact@v4
