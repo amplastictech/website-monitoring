@@ -16,16 +16,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install Firefox (Non-Snap), Geckodriver, and Selenium
         run: |
-          python -m pip install --upgrade pip
-          pip install selenium
+          python -m pip install --upgrade pip selenium
           sudo apt-get update
-          sudo apt-get purge -y firefox
           sudo snap remove firefox || true
-          sudo apt-get install -y wget xvfb curl
-          sudo apt-get install -y firefox-esr || sudo apt-get install -y firefox
+          sudo apt-get purge -y firefox || true
+          sudo apt-get install -y xvfb wget curl libgtk-3-0 libdbus-glib-1-2 libx11-xcb1
+          
+          # Download and install Firefox from Mozilla directly
+          wget https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US -O firefox.tar.bz2
+          sudo tar xjf firefox.tar.bz2 -C /opt/
+          sudo ln -s /opt/firefox/firefox /usr/local/bin/firefox
+          sudo mv firefox /opt/firefox
+          sudo ln -sf /opt/firefox/firefox /usr/bin/firefox
 
+          # Get latest geckodriver
           GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
           wget https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz
           sudo tar -xzf geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz -C /usr/local/bin/
