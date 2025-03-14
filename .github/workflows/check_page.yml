@@ -22,13 +22,20 @@ jobs:
           python -m pip install --upgrade pip selenium
           sudo apt update
           sudo snap remove firefox || true
+          sudo snap remove geckodriver || true
           sudo apt-get purge firefox -y || true
-          sudo apt install -y firefox wget xvfb
-          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r .tag_name)
+          sudo rm -f /snap/bin/geckodriver
+          sudo apt install -y wget curl xvfb jq libgtk-3-0 libxtst6 libx11-xcb1 libdbus-glib-1-2
+
+          FIREFOX_VERSION=$(curl -s 'https://product-details.mozilla.org/1.0/firefox_versions.json' | jq -r '.LATEST_FIREFOX_VERSION')
+          wget "https://ftp.mozilla.org/pub/firefox/releases/${FIREFOX_VERSION}/linux-x86_64/en-US/firefox-${FIREFOX_VERSION}.tar.bz2"
+          sudo tar -xjf firefox-${FIREFOX_VERSION}.tar.bz2 -C /opt/
+          sudo ln -sf /opt/firefox/firefox /usr/bin/firefox
+      
+          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.tag_name')
           wget "https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz"
           sudo tar -xzf geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz -C /usr/local/bin/
           sudo chmod +x /usr/local/bin/geckodriver
-
       - name: Run Python script
         run: |
           Xvfb :99 -screen 0 1024x768x24 &
