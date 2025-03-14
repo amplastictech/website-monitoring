@@ -2,7 +2,7 @@ name: Check Jeep Page
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # Every minute
+    - cron: '*/1 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -21,9 +21,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium
           sudo apt-get update
-          sudo apt-get install -y firefox xvfb wget
-          wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
-          sudo tar -xzf geckodriver-v0.34.0-linux64.tar.gz -C /usr/local/bin/
+          sudo apt-get install -y firefox xvfb wget curl
+          GECKODRIVER_VERSION=$(curl --silent "https://api.github.com/repos/mozilla/geckodriver/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          wget https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz
+          sudo tar -xzf geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz -C /usr/local/bin/
           sudo chmod +x /usr/local/bin/geckodriver
 
       - name: Run Python Script
@@ -31,7 +32,7 @@ jobs:
           mkdir -p 404
           Xvfb :99 -screen 0 1024x768x24 &
           export DISPLAY=:99
-          sleep 3  # Wait for virtual display
+          sleep 3
           python check_jeep_page.py
 
       - name: Upload Logs (if exist)
