@@ -28,7 +28,7 @@ jobs:
           sudo rm -f /snap/bin/geckodriver
           sudo apt install -y wget curl xvfb jq libgtk-3-0 libxtst6 libx11-xcb1 libdbus-glib-1-2
       
-          wget -O firefox.tar.bz2 "https://ftp.mozilla.org/pub/firefox/releases/latest/linux-x86_64/en-US/firefox-latest.tar.bz2"
+          wget -O firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
           sudo tar -xjf firefox.tar.bz2 -C /opt/
           sudo ln -sf /opt/firefox/firefox /usr/bin/firefox
       
