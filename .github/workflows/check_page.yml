@@ -16,14 +16,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies (Python, Firefox, Geckodriver)
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install selenium
-          sudo apt update
-          sudo apt remove -y firefox
+          sudo apt-get update
+          sudo apt-get purge -y firefox
           sudo snap remove firefox || true
-          sudo apt-get install -y firefox xvfb wget curl
+          sudo apt-get install -y wget xvfb curl
+          sudo apt-get install -y firefox-esr || sudo apt-get install -y firefox
+
           GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
           wget https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz
           sudo tar -xzf geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz -C /usr/local/bin/
