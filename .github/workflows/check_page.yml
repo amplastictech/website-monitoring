@@ -12,31 +12,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Firefox (Non-Snap), Geckodriver, Selenium, and Xvfb
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip selenium
           sudo apt update
           sudo snap remove firefox || true
-          sudo apt-get purge -y firefox || true
-          sudo apt install -y wget curl xvfb libdbus-glib-1-2 libgtk-3-0 libxtst6 libxss1 libpci3 libx11-xcb1 jq
-
-          FIREFOX_VERSION=$(curl -s 'https://product-details.mozilla.org/1.0/firefox_versions.json' | jq -r '.LATEST_FIREFOX_VERSION')
-          wget "https://ftp.mozilla.org/pub/firefox/releases/${FIREFOX_VERSION}/linux-x86_64/en-US/firefox-${FIREFOX_VERSION}.tar.bz2"
-          sudo tar -xjf firefox-${FIREFOX_VERSION}.tar.bz2 -C /opt/
-          sudo ln -sf /opt/firefox/firefox /usr/bin/firefox
-
-          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
-          wget https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz
+          sudo apt-get purge firefox -y || true
+          sudo apt install -y firefox wget xvfb
+          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r .tag_name)
+          wget "https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz"
           sudo tar -xzf geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz -C /usr/local/bin/
           sudo chmod +x /usr/local/bin/geckodriver
 
-      - name: Run Python Script
+      - name: Run Python script
         run: |
-          mkdir -p 404
           Xvfb :99 -screen 0 1024x768x24 &
           export DISPLAY=:99
           sleep 3
@@ -48,4 +42,3 @@ jobs:
         with:
           name: 404-logs
           path: 404/*.txt
-          if-no-files-found: ignore
