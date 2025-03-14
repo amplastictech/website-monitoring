@@ -2,8 +2,8 @@ name: Check Jeep Page
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # Runs every minute
-  workflow_dispatch:       # Allow manual run
+    - cron: '*/1 * * * *'
+  workflow_dispatch:
 
 jobs:
   check_page:
@@ -12,32 +12,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install selenium
           sudo apt-get update
-          sudo apt-get install -y firefox
-          sudo apt-get install -y xvfb
-          sudo wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
+          sudo apt-get install -y firefox xvfb
+          wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
           sudo tar -xzf geckodriver-v0.34.0-linux64.tar.gz -C /usr/local/bin/
           sudo chmod +x /usr/local/bin/geckodriver
-          
-      - name: Run Python script
+
+      - name: Run Script
         run: |
-          Xvfb :99 -screen 0 1024x768x24 &  # start virtual display
+          mkdir -p 404
+          Xvfb :99 -screen 0 1024x768x24 &
           export DISPLAY=:99
-          pip install selenium
           python check_jeep_page.py
-          
-      - name: Upload Logs if Exists
+
+      - name: Upload Logs (if any)
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: 404-logs
           path: 404/*.txt
+          if-no-files-found: ignore
