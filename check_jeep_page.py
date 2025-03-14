@@ -1,29 +1,31 @@
 import datetime
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 import os
 
 options = webdriver.FirefoxOptions()
-options.add_argument('--headless')  # Required for GitHub Actions
+options.add_argument('--headless')
 options.add_argument('--no-sandbox')
 
 driver = webdriver.Firefox(options=options)
 
 try:
-    driver.get("https://www.kbdbodykits.com/jeep-wrangler-jk-flat-polyurethane-flat-fender-flares-kit")
+    url = "https://www.kbdbodykits.com/jeep-wrangler-jk-flat-polyurethane-flat-fender-flares-kit"
+    driver.get(url=url)
 
-    if "Jeep Wrangler JK (2/4 Doors) & Unlimited 2007-2018 Front & Rear 4 Piece Polyurethane Fender Flares Kit" not in driver.page_source:
-        now = datetime.datetime.now()
+    expected_text = "Jeep Wrangler JK (2/4 Doors) & Unlimited 2007-2018 Front & Rear 4 Piece Polyurethane Fender Flares Kit"
+    now = datetime.datetime.now()
+
+    if expected_text not in driver.page_source:
+        os.makedirs("404", exist_ok=True)
         filename = now.strftime("%Y-%m-%d_%H-%M-%S_jk.txt")
+        filepath = os.path.join("404", filename)
 
-        if not os.path.exists("404"):
-            os.makedirs("404")
-        with open(os.path.join("404", filename), "w") as file:
-            file.write("jk flares page not loaded")
+        with open(filepath, "w") as file:
+            file.write("JK flares page not loaded")
 
-        print(f"Specified text was not found and logged in {filename}")
+        print(f"Specified text NOT FOUND. Logged in {filename}")
     else:
-        print("Specified text found!")
+        print("Specified text found! No log created.")
 
 except Exception as e:
     print("An error occurred:", e)
