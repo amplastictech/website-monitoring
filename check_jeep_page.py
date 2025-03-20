@@ -15,9 +15,9 @@ logger = logging.getLogger(__name__)
 
 def send_email(subject, body):
     try:
-        sender = os.environ.get('GMAIL_USER')
-        password = os.environ.get('GMAIL_PASSWORD')
-        recipient = os.environ.get('EMAIL_RECIPIENT')
+        sender = os.getenv('GMAIL_USER')
+        password = os.getenv('GMAIL_PASSWORD')
+        recipient = os.getenv('EMAIL_RECIPIENT')
         
         msg = MIMEText(body)
         msg['Subject'] = subject
