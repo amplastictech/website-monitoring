@@ -1,9 +1,9 @@
 name: Check Website
 
 on:
-  schedule:
-    - cron: '0 * * * *'  # Runs every hour
-  workflow_dispatch:     # Allows manual trigger
+ # schedule:
+#    - cron: '0 * * * *'  # Runs every hour
+ # workflow_dispatch:     # Allows manual trigger
 
 jobs:
   check-website:
