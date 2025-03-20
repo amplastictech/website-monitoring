@@ -4,10 +4,6 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 import logging
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -15,9 +11,9 @@ logger = logging.getLogger(__name__)
 
 def send_email(subject, body):
     try:
-        sender = os.getenv('GMAIL_USER')
-        password = os.getenv('GMAIL_PASSWORD')
-        recipient = os.getenv('EMAIL_RECIPIENT')
+        sender = os.environ.get('GMAIL_USER')
+        password = os.environ.get('GMAIL_PASSWORD')
+        recipient = os.environ.get('EMAIL_RECIPIENT')
         
         msg = MIMEText(body)
         msg['Subject'] = subject
