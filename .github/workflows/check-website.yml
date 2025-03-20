@@ -11,10 +11,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4  # Updated to v4 for consistency
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5  # Updated to v5 (latest as of now)
       with:
         python-version: '3.x'
     
@@ -24,8 +24,8 @@ jobs:
         pip install selenium
         sudo apt-get update
         sudo apt-get install -y firefox
-        wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-        tar -xzf geckodriver-v0.33.0-linux64.tar.gz
+        wget https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
+        tar -xzf geckodriver-v0.34.0-linux64.tar.gz
         sudo mv geckodriver /usr/local/bin/
     
     - name: Run website check
@@ -37,9 +37,14 @@ jobs:
         EXPECTED_TEXT: 'Jeep Wrangler JK (2/4 Doors) & Unlimited 2007-2018 Front & Rear 4 Piece Polyurethane Fender Flares Kit'
       run: python script.py
     
+    - name: Debug directory contents
+      run: |
+        ls -la
+        if [ -d "404" ]; then ls -la 404/; else echo "404 directory not created"; fi
+    
     - name: Upload artifacts if they exist
       if: always()
-      uses: actions/upload-artifact@v3.1.3  # Explicitly specify the exact version
+      uses: actions/upload-artifact@v4  # Updated to v4
       with:
         name: log-files
         path: 404/*.txt
