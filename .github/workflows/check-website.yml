@@ -35,7 +35,7 @@ jobs:
         EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
         TARGET_URL: 'https://www.kbdbodykits.com/jeep-wrangler-jk-flat-polyurethane-flat-fender-flares-kit'
         EXPECTED_TEXT: 'Jeep Wrangler JK (2/4 Doors) & Unlimited 2007-2018 Front & Rear 4 Piece Polyurethane Fender Flares Kit'
-      run: python script.py
+      run: python check_jeep_page.py
     
     - name: Debug directory contents
       run: |
