@@ -11,10 +11,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4  # Updated to v4 for consistency
+      uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v5  # Updated to v5 (latest as of now)
+      uses: actions/setup-python@v5
       with:
         python-version: '3.x'
     
@@ -24,9 +24,11 @@ jobs:
         pip install selenium
         sudo apt-get update
         sudo apt-get install -y firefox
-        wget https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
-        tar -xzf geckodriver-v0.34.0-linux64.tar.gz
+        # Install latest compatible geckodriver
+        wget https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-linux64.tar.gz
+        tar -xzf geckodriver-v0.36.0-linux64.tar.gz
         sudo mv geckodriver /usr/local/bin/
+        geckodriver --version  # Verify installation
     
     - name: Run website check
       env:
@@ -44,7 +46,7 @@ jobs:
     
     - name: Upload artifacts if they exist
       if: always()
-      uses: actions/upload-artifact@v4  # Updated to v4
+      uses: actions/upload-artifact@v4
       with:
         name: log-files
         path: 404/*.txt
